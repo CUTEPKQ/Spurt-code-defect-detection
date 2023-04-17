@@ -1,21 +1,23 @@
 '''
 Author: fyx
 Date: 2023-04-10 18:22:37
-LastEditTime: 2023-04-14 15:59:56
+LastEditTime: 2023-04-17 09:02:47
 Description: 缺陷生成
 '''
 import cv2
 import numpy as np
 import os
 import pandas as pd
-
+import random
 
 
 class DataProcessor:
-    def __init__(self,path:str= None,num:int= None) -> None:
+    def __init__(self,path:str= None,num:int= None,save_path:str= None) -> None:
         # 加载原始喷码图像
         self.path=path
         self.num=num
+        self.save_path=save_path
+        
 
     def data_process(self,img_path:str= None,info_path:str= None)-> None:
         '''
@@ -28,29 +30,64 @@ class DataProcessor:
             flie_path=os.path.join(self.path,path_name)
             picture_name=path_name+'.jpg'
             info_name=path_name+'.csv'
-            
 
             
 
 
-
-
-        
-    
-
-    def img_loss(self,picture_path:str= None,info_path:str= None)-> None:
+    def img_loss(self,picture_path:str= None,info_path:str= None,id:int= None)-> None:
         '''
-        description: 
+        description: 处理缺陷
         ''' 
-
-        
-      
-        
+        img=cv2.imread(picture_path)
+        img_pd=pd.read_csv(info_path)
+        select=random.randint(0,img_pd.shape[0])
+        sub_pd=img_pd.iloc[select]
+        location=sub_pd.values[:-1]
+        result=img.copy()
+        save_img_fold=os.path.join(self.save_path,'processed_picture'+str(id))
+        if os.path.exists(save_img_fold):
+            os.makedirs(save_img_fold)
+        mode=1
+        #mode=1,单个字符漏印
+        if mode==1:
+            mask=np.zeros((tuple(location[2:])),np.uint8)
+            result[location[0]:location[0]+location[2],location[1]:location[1]+location[3],:]=mask
+            save_img_path=os.path.join(save_img_fold,'loss1_picture'+str(id))
+            cv2.imwrite(save_img_path,result)
+            print(f'successfully get loss1 form picture{id}')
+        ## mode==2 缺失
+        elif mode==2:
+            h=random.randint(0,result.shape[0])
+            start=random.randint(0,result.shape[0]-h)
+            result[start:start+h, :,]=[0,0,0]
+            save_img_path=os.path.join(save_img_fold,'loss1_picture'+str(id))
+            cv2.imwrite(save_img_path,result)
+            print(f'successfully get loss1 form picture{id}')   
           
-        pass
+    def img_add(self,picture_path:str= None,info_path:str= None,id:int= None)-> None:
+        img=cv2.imread(picture_path)
+        img_info=pd.read_csv(info_path)
+        # 随机生成污染区域的位置和大小
+        h, w = img.shape[:2]
+        x = np.random.randint(0, w-100)
+        y = np.random.randint(0, h-100)
+        width = np.random.randint(50, 100)
+        height = np.random.randint(50, 100)
 
-    
-    def img_add(self)-> None:
+        # 随机生成污染区域的形状
+        num_points = np.random.randint(5, 20)
+        points = np.zeros((num_points, 2), dtype=np.int32)
+        for i in range(num_points):
+            points[i, 0] = np.random.randint(x, x+width)
+            points[i, 1] = np.random.randint(y, y+height)
+
+        # 创建掩模图像
+        mask = np.zeros_like(img)
+        cv2.fillPoly(mask, [points], (255, 255, 255))
+
+        # 将掩模应用于原图像
+        result = cv2.bitwise_and(img, mask)
+
         pass
 
   
