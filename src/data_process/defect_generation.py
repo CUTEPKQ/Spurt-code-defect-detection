@@ -1,7 +1,7 @@
 '''
 Author: fyx
 Date: 2023-04-10 18:22:37
-LastEditTime: 2023-04-18 19:44:11
+LastEditTime: 2023-04-18 21:11:31
 Description: 缺陷生成
 '''
 import cv2
@@ -54,7 +54,7 @@ class DataProcessor:
         save_img_fold=os.path.join(self.save_path,'picture'+str(id))
         if not os.path.exists(save_img_fold):
             os.makedirs(save_img_fold)
-        mode=np.random.randint(1,2)
+        mode=2
         #mode=1,单个字符漏印
         if mode==1:
             select=random.randint(0,img_pd.shape[0]-1)
@@ -85,7 +85,7 @@ class DataProcessor:
         # 创建一个空白掩膜，尺寸与原始图像相同
         mask = np.zeros(img.shape[:2], dtype=np.uint8)
         # 随机生成一个圆形区域
-        radius=np.random.randint(10,20)
+        radius=np.random.randint(5,10)
         center=(np.random.randint(radius,img.shape[1]-radius),
                 np.random.randint(radius,img.shape[0]-radius))
         cv2.circle(mask, center, radius, 255, -1)
@@ -104,7 +104,7 @@ class DataProcessor:
         mask = cv2.bitwise_not(mask)
         # 将原始图像和掩膜进行与操作，保留圆形区域以外的颜色
         result = cv2.bitwise_and(img, img, mask=mask)
-        save_img_path=os.path.join(save_img_fold,'loss2_picture'+str(id)+'.jpg')
+        save_img_path=os.path.join(save_img_fold,'pollutr_picture'+str(id)+'.jpg')
         cv2.imwrite(save_img_path,result)
         print(f'successfully  pollute  picture{id}') 
   
@@ -120,7 +120,7 @@ class DataProcessor:
         kernel_size=np.random.choice([i for i in range(7,20,2)])
         # 进行高斯滤波
         result= cv2.GaussianBlur(noisy_img, (kernel_size,kernel_size),5)
-        save_img_path=os.path.join(save_img_fold,'loss2_picture'+str(id)+'.jpg')
+        save_img_path=os.path.join(save_img_fold,'blur_picture'+str(id)+'.jpg')
         cv2.imwrite(save_img_path,result)
         print(f'successfully  blur  picture{id}') 
 
