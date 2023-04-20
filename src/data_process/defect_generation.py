@@ -1,7 +1,7 @@
 '''
 Author: fyx
 Date: 2023-04-10 18:22:37
-LastEditTime: 2023-04-18 21:11:31
+LastEditTime: 2023-04-20 17:34:00
 Description: 缺陷生成
 '''
 import cv2
@@ -17,12 +17,12 @@ def random_odd_number(a, b) -> int:
 
 
 class DataProcessor:
-    def __init__(self,path:str= None,num:int= None,save_path:str= None) -> None:
+    def __init__(self,path:str= None,num:int= None,save_path:str= None,lable_path:str = None) -> None:
         # 加载原始喷码图像
         self.path=path
         self.num=num
         self.save_path=save_path
-        
+        self.lable_path = lable_path
 
     def data_process(self)-> None:
         '''
@@ -65,6 +65,7 @@ class DataProcessor:
             result[location[1]:location[1]+location[2],location[0]:location[0]+location[3],:]=[255,255,255]
             save_img_path=os.path.join(save_img_fold,'loss1_picture'+str(id)+'.jpg')
             cv2.imwrite(save_img_path,result)
+            self.label_generate(save_img_path+'    '+str(1)+'\r')
             print(f'successfully get loss1 form picture{id}')
         ## mode==2 缺失
         elif mode==2:
@@ -73,6 +74,7 @@ class DataProcessor:
             result[start:start+h]=[255,255,255]
             save_img_path=os.path.join(save_img_fold,'loss2_picture'+str(id)+'.jpg')
             cv2.imwrite(save_img_path,result)
+            self.label_generate(save_img_path+'    '+str(1)+'\r')
             print(f'successfully get loss2 form picture{id}')   
           
     def img_add(self,picture_path:str= None,id:int= None)-> None:
@@ -106,6 +108,7 @@ class DataProcessor:
         result = cv2.bitwise_and(img, img, mask=mask)
         save_img_path=os.path.join(save_img_fold,'pollutr_picture'+str(id)+'.jpg')
         cv2.imwrite(save_img_path,result)
+        self.label_generate(save_img_path+'    '+str(1)+'\r')
         print(f'successfully  pollute  picture{id}') 
   
     def img_blur(self,picture_path:str= None,id:int= None)-> None:
@@ -122,13 +125,21 @@ class DataProcessor:
         result= cv2.GaussianBlur(noisy_img, (kernel_size,kernel_size),5)
         save_img_path=os.path.join(save_img_fold,'blur_picture'+str(id)+'.jpg')
         cv2.imwrite(save_img_path,result)
+        self.label_generate(save_img_path+'    '+str(1)+'\r')
         print(f'successfully  blur  picture{id}') 
+    
+    def label_generate(self,data:str = None) -> None:
+        write_obj=open(self.lable_path,'a')
+        with write_obj as f:
+            f.write(data)
+        
 
 
 def main()-> None:
-    picture_path="D:/Desktop/Destop_files/Spurt-code-defect-detection/data/origin_data/"
-    save_path="D:/Desktop/Destop_files/Spurt-code-defect-detection/data/process_data/"
-    processor=DataProcessor(picture_path,10,save_path)
+    picture_path="D:\Desktop\Destop_files\Spurt-code-defect-detection\data\origin_data"
+    save_path="D:\Desktop\Destop_files\Spurt-code-defect-detection\data\process_data"
+    lable_path="D:\Desktop\Destop_files\Spurt-code-defect-detection\data\lable.txt"
+    processor=DataProcessor(picture_path,10,save_path,lable_path=lable_path)
     processor.data_process()
     # processor.img_shift(20,30)
 
