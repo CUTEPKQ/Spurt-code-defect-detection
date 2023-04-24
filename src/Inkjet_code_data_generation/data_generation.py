@@ -20,7 +20,7 @@ current_path=os.path.dirname(__file__)
 # 加载字体文件
 font_path = os.path.join(current_path, 'ttf/point.ttf')
 # 保存位置
-save_folder =os.path.join(current_path,'../..','data/','origin_data/') 
+save_folder =os.path.join(current_path,'../..','data/','non-defect/') 
 dicname_format = 'picture_{}/'
 picture_filename_format = 'picture_{}.jpg'
 csv_filename_format = 'picture_{}.csv'
@@ -179,7 +179,7 @@ def create_data(picture_num):
         dicname = dicname_format.format(k + 1)
         picture_filename = picture_filename_format.format(k + 1)
         csv_filename = csv_filename_format.format(k + 1)
-        save_path = save_folder + dicname
+        save_path = save_folder 
 
 
         # 起始
