@@ -218,8 +218,8 @@ def create_data(picture_num):
 
 
 
-        for bbox in char_positions:
-            draw.rectangle((bbox[0], bbox[1], bbox[0] + bbox[3], bbox[1] + bbox[2]), outline="black")
+        # for bbox in char_positions:
+        #     draw.rectangle((bbox[0], bbox[1], bbox[0] + bbox[3], bbox[1] + bbox[2]), outline="black")
 
         # bbox = font.getbbox(text)
         # print('bbox' , bbox)
