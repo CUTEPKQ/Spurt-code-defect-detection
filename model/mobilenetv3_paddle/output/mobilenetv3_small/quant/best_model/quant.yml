@@ -1,0 +1,13 @@
+quant_config:
+  activation_bits: 8
+  activation_preprocess_type: null
+  activation_quantize_type: moving_average_abs_max
+  dtype: int8
+  moving_rate: 0.9
+  quantizable_layer_type:
+  - Conv2D
+  - Linear
+  weight_bits: 8
+  weight_preprocess_type: null
+  weight_quantize_type: channel_wise_abs_max
+  window_size: 10000
