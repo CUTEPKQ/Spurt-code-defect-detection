@@ -235,7 +235,7 @@ def create_data(picture_num):
                 writer.writerow([x, y, h, w, info])
 
 
-create_data(10)
+create_data(200)
 
 
 # get_pos_rate_dic(20)
