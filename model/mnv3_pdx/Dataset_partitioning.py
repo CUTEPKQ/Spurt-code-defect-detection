@@ -1,5 +1,5 @@
 import os
-
+### 这是用来修改标注列表信息的，不要再运行
 # path = "data"
 # datanames = os.listdir(path)
 # for i in datanames:

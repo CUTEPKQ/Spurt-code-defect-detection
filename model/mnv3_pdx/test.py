@@ -1,5 +1,4 @@
 import paddlex as pdx
-import matplotlib as plt
 import cv2
 
 model = pdx.load_model('output/mobilenetv3_small/best_model')
