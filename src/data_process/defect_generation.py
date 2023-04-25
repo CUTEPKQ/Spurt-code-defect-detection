@@ -106,6 +106,7 @@ class DataProcessor:
         # 读取图片
         img = cv2.imread(picture_path)
         # 创建一个空白掩膜，尺寸与原始图像相同
+        # 产生污点的个数
         choice=np.random.choice([1,2,3],p=[0.7,0.2,0.1])
         for i in range(choice):
             mask = np.zeros(img.shape[:2], dtype=np.uint8)
