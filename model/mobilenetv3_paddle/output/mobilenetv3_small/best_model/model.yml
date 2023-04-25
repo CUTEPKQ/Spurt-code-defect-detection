@@ -26,7 +26,7 @@ Transforms:
     - 0.225
 _Attributes:
   eval_metrics:
-    acc1: 1.0
+    acc1: 0.96875
   fixed_input_shape: null
   labels:
   - bocai
@@ -39,6 +39,6 @@ _Attributes:
   num_classes: 6
 _init_params:
   num_classes: 6
-completed_epochs: 2
+completed_epochs: 1
 status: Normal
 version: 2.1.0

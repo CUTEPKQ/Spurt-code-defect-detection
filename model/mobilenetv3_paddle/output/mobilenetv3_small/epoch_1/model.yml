@@ -26,7 +26,7 @@ Transforms:
     - 0.225
 _Attributes:
   eval_metrics:
-    acc1: 0.98046875
+    acc1: 0.96875
   fixed_input_shape: null
   labels:
   - bocai

@@ -2,8 +2,8 @@ import paddlex as pdx
 from paddlex import transforms as T
 
 # 下载和解压蔬菜分类数据集
-veg_dataset = 'https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz'
-pdx.utils.download_and_decompress(veg_dataset, path='./')
+# veg_dataset = 'https://bj.bcebos.com/paddlex/datasets/vegetables_cls.tar.gz'
+# pdx.utils.download_and_decompress(veg_dataset, path='./')
 
 # 定义训练和验证时的transforms
 # API说明：https://github.com/PaddlePaddle/PaddleX/blob/develop/docs/apis/transforms/transforms.md
