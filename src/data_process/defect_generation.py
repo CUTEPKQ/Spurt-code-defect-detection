@@ -1,7 +1,7 @@
 '''
 Author: fyx
 Date: 2023-04-10 18:22:37
-LastEditTime: 2023-04-24 21:07:06
+LastEditTime: 2023-04-25 14:02:46
 Description: 缺陷生成
 '''
 import cv2
@@ -105,7 +105,7 @@ class DataProcessor:
     def img_add(self,picture_path:str= None,id:int= None)-> None:
         # 读取图片
         img = cv2.imread(picture_path)
-        # 创建一个空白掩膜，尺寸与原始图像相同
+        result = img.copy()
         # 产生污点的个数
         choice=np.random.choice([1,2,3],p=[0.7,0.2,0.1])
         for i in range(choice):
@@ -136,11 +136,11 @@ class DataProcessor:
             # 将掩膜反转，变成黑色圆形区域的掩膜
             mask = cv2.bitwise_not(mask)
             # 将原始图像和掩膜进行与操作，保留圆形区域以外的颜色
-            result = cv2.bitwise_and(img, img, mask=mask)
-            save_img_path=os.path.join(self.save_path,'pollute_picture'+str(id)+'.jpg')
-            cv2.imwrite(save_img_path,result)
-            self.lables.append(save_img_path+'    '+str(1)+'\r')
-            print(f'successfully  pollute  picture{id}') 
+            result = cv2.bitwise_and(result, result, mask=mask)
+        save_img_path=os.path.join(self.save_path,'pollute_picture'+str(id)+'.jpg')
+        cv2.imwrite(save_img_path,result)
+        self.lables.append(save_img_path+'    '+str(1)+'\r')
+        print(f'successfully  pollute  picture{id}') 
     
     def add_noisy(self,picture_path:str= None,id:int= None)-> None:
         # Load the image
