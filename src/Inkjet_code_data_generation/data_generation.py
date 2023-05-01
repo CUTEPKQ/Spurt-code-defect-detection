@@ -169,7 +169,7 @@ def create_data(picture_num):
         # 文字位置 & 绘制
         # output_size = (1, 1)
         # draw.text(output_size, text, text_color, font=font)
-        text_color = (random.randint(20, 255), random.randint(20, 255), random.randint(20, 255))
+        text_color = (0, 0, 0)
         origin_x = int(random.random() * (w - origin_w))
         origin_y = int(random.random() * (h - origin_h))
         output_size = (origin_x, origin_y)
