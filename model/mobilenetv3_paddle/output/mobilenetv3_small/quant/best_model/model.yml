@@ -1,0 +1,44 @@
+Model: MobileNetV3_small
+Transforms:
+- ResizeByShort:
+    interp: LINEAR
+    max_size: -1
+    short_size: 256
+- CenterCrop:
+    crop_size: 224
+- Normalize:
+    is_scale: true
+    max_val:
+    - 255.0
+    - 255.0
+    - 255.0
+    mean:
+    - 0.485
+    - 0.456
+    - 0.406
+    min_val:
+    - 0
+    - 0
+    - 0
+    std:
+    - 0.229
+    - 0.224
+    - 0.225
+_Attributes:
+  eval_metrics:
+    acc1: 0.60546875
+  fixed_input_shape: null
+  labels:
+  - bocai
+  - changqiezi
+  - hongxiancai
+  - huluobo
+  - xihongshi
+  - xilanhua
+  model_type: classifier
+  num_classes: 6
+_init_params:
+  num_classes: 6
+completed_epochs: 4
+status: Quantized
+version: 2.1.0
