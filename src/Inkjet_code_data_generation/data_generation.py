@@ -17,6 +17,7 @@ en_dic_list = en_dic_list[0:62]
 background_color = (255, 255, 255)
 
 current_path=os.path.dirname(__file__)
+print(current_path)
 # 加载字体文件
 font_path = os.path.join(current_path, 'ttf/point.ttf')
 # 保存位置
