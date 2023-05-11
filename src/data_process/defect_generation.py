@@ -1,7 +1,7 @@
 '''
 Author: fyx
 Date: 2023-04-10 18:22:37
-LastEditTime: 2023-05-01 15:53:07
+LastEditTime: 2023-05-11 18:51:43
 Description: 缺陷生成
 '''
 import cv2
@@ -43,12 +43,16 @@ class DataProcessor:
                 bg_path = os.path.join(path,file)
                 bg_img = cv2.imread(bg_path)
                 mask = 255*np.ones(img.shape,img.dtype)
-                
-                width, height, channels = bg_img.shape
-                center = (np.random.randint(int(height/2)-20,int(height/2)+20),np.random.randint(int(width/2)-20,int(width/2)+20))
+                #背景图shape             
+                height, width, channels = bg_img.shape
+                print(img.shape)
+                center = (np.random.randint(int(width/2)-20,int(width/2)+20),np.random.randint(int(height/2)-20,int(height/2)+20))
                 mixed_clone = cv2.seamlessClone(img, bg_img, mask, center, cv2.MIXED_CLONE)
+                # ret_img = mixed_clone
+                ret_img = mixed_clone[center[1]-128:center[1]+128,center[0]-400:center[0]+400]
                 img_path = save_path[:-4]+'_'+str(id)+'.jpg'
-                cv2.imwrite(img_path,mixed_clone)
+                
+                cv2.imwrite(img_path,ret_img)
                 if img_type == 0:
                     self.lables.append(img_path+'    '+str(0)+'\r')
                 else :
@@ -70,7 +74,7 @@ class DataProcessor:
             self.img_loss(picture_path=picture_name,info_path=info_name,id=id)
             self.img_blur(picture_path=picture_name,id=id)
             self.img_add(picture_path=picture_name,id=id)
-            self.add_noisy(picture_path=picture_name,id=id)
+            #self.add_noisy(picture_path=picture_name,id=id)
         
         train_list , other_list = train_test_split(self.lables,train_size=0.7)
         value_list , test_list  = train_test_split(other_list,train_size=0.6)
@@ -87,7 +91,6 @@ class DataProcessor:
 
         print("successfully process pictures")
             
-    
 
     def img_loss(self,picture_path:str= None,info_path:str= None,id:int= None)-> None:
         '''
@@ -186,7 +189,7 @@ class DataProcessor:
         noise = np.zeros(img.shape, np.uint8)
         cv2.randn(noise, 0, 50)
         noisy_img = cv2.add(img, noise)
-        kernel_size=np.random.choice([i for i in range(7,20,2)])
+        kernel_size=np.random.choice([i for i in range(7,16,2)])
         # 进行高斯滤波
         result= cv2.GaussianBlur(noisy_img, (kernel_size,kernel_size),5)
         save_img_path=os.path.join(self.save_path,'blur_picture'+str(id)+'.jpg')
@@ -199,7 +202,6 @@ class DataProcessor:
         with write_obj as f:
             f.write(data)
         
-
 
 def main()-> None:
     config={}

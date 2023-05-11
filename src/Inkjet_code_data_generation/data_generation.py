@@ -132,12 +132,10 @@ def get_pos_rate_dic(text,font_size):
 
 def create_data(picture_num):
 
-
-
     for k in range(picture_num):
 
         # 确认字体
-        font_size = random.randint(20, 70)
+        font_size = random.randint(30, 60)
         font = ImageFont.truetype(font_path, font_size)
 
         # 确认文本,和序列
