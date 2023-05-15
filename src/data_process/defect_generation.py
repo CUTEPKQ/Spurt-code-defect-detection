@@ -1,7 +1,7 @@
 '''
 Author: fyx
 Date: 2023-04-10 18:22:37
-LastEditTime: 2023-05-11 18:51:43
+LastEditTime: 2023-05-11 22:01:54
 Description: 缺陷生成
 '''
 import cv2
@@ -205,13 +205,13 @@ class DataProcessor:
 
 def main()-> None:
     config={}
-    config['picture_path'] = os.path.join(os.path.dirname(__file__),'..\..', 'data','non-defect') 
-    config['save_path'] = os.path.join(os.path.dirname(__file__), '..\..','data','defect') 
-    config['lable_path'] = os.path.join(os.path.dirname(__file__), '..\..','data','lables.txt') 
-    config['train_path'] = os.path.join(os.path.dirname(__file__), '..\..','data','train_list.txt') 
-    config['test_path'] = os.path.join(os.path.dirname(__file__), '..\..','data','test_list.txt')
-    config['val_path'] = os.path.join(os.path.dirname(__file__), '..\..','data','val_list.txt')
-    config['bg_path'] = os.path.join(os.path.dirname(__file__), '..\..','data','background')
+    config['picture_path'] = os.path.join(os.path.dirname(__file__),'../..', 'data','non-defect') 
+    config['save_path'] = os.path.join(os.path.dirname(__file__), '../..','data','defect') 
+    config['lable_path'] = os.path.join(os.path.dirname(__file__), '../..','data','lables.txt') 
+    config['train_path'] = os.path.join(os.path.dirname(__file__), '../..','data','train_list.txt') 
+    config['test_path'] = os.path.join(os.path.dirname(__file__), '../..','data','test_list.txt')
+    config['val_path'] = os.path.join(os.path.dirname(__file__), '../..','data','val_list.txt')
+    config['bg_path'] = os.path.join(os.path.dirname(__file__), '../..','data','background')
     config['num'] = int(20)
     processor=DataProcessor(config=config)
     processor.data_process()
