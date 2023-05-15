@@ -1,7 +1,7 @@
 '''
 Author: fyx
 Date: 2023-04-10 18:22:37
-LastEditTime: 2023-05-11 22:01:54
+LastEditTime: 2023-05-15 20:42:13
 Description: 缺陷生成
 '''
 import cv2
@@ -45,7 +45,6 @@ class DataProcessor:
                 mask = 255*np.ones(img.shape,img.dtype)
                 #背景图shape             
                 height, width, channels = bg_img.shape
-                print(img.shape)
                 center = (np.random.randint(int(width/2)-20,int(width/2)+20),np.random.randint(int(height/2)-20,int(height/2)+20))
                 mixed_clone = cv2.seamlessClone(img, bg_img, mask, center, cv2.MIXED_CLONE)
                 # ret_img = mixed_clone
@@ -71,9 +70,15 @@ class DataProcessor:
             origin_img = cv2.imread(picture_name)
             self.add_bg(save_path=picture_name,img=origin_img,img_type=0)
             info_name=os.path.join(self.path,path_name+'.csv')
-            self.img_loss(picture_path=picture_name,info_path=info_name,id=id)
-            self.img_blur(picture_path=picture_name,id=id)
-            self.img_add(picture_path=picture_name,id=id)
+            #缺陷类型
+            defect_type = np.random.randint(1,3)
+            if defect_type ==1:
+                self.img_loss(picture_path=picture_name,info_path=info_name,id=id)
+            elif defect_type ==2:
+                self.img_blur(picture_path=picture_name,id=id)
+            else:
+                self.img_add(picture_path=picture_name,id=id)
+            
             #self.add_noisy(picture_path=picture_name,id=id)
         
         train_list , other_list = train_test_split(self.lables,train_size=0.7)
@@ -207,7 +212,7 @@ def main()-> None:
     config={}
     config['picture_path'] = os.path.join(os.path.dirname(__file__),'../..', 'data','non-defect') 
     config['save_path'] = os.path.join(os.path.dirname(__file__), '../..','data','defect') 
-    config['lable_path'] = os.path.join(os.path.dirname(__file__), '../..','data','lables.txt') 
+    config['lable_path'] = os.path.join(os.path.dirname(__file__), '../..','data','labels.txt') 
     config['train_path'] = os.path.join(os.path.dirname(__file__), '../..','data','train_list.txt') 
     config['test_path'] = os.path.join(os.path.dirname(__file__), '../..','data','test_list.txt')
     config['val_path'] = os.path.join(os.path.dirname(__file__), '../..','data','val_list.txt')
