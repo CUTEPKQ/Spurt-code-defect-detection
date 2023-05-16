@@ -37,10 +37,27 @@ class MyModel:
     
     def predict(self,img) :
         return self.model.predict(img)
+    
+    def test(self,test_data,com_result):
+        results = self.model.predict(test_data)
+        predict = []
+        for result in results:
+            if 'category_id' in result[0].keys():
+                category_id = result[0]['category_id']
+                predict.append(category_id)
+        p = 0
+        for i in range(len(com_result)):
+            if(com_result[i]==predict[i]):
+                p = p+1
+        print("the accuracy for test data is: ",p/len(predict))
+
 
 def data_handle() -> None:
     handle_list = ['train_list.txt','test_list.txt','val_list.txt']
     path = "data"
+    test_data = []
+    com_result = []
+    
     datanames = os.listdir(path)
     for i in datanames:
         if i in handle_list:
@@ -51,18 +68,23 @@ def data_handle() -> None:
                     if line.startswith(".."):
                         new_line = line[11:]
                         new_lines.append(new_line)
+                        if i =='test_list.txt':
+                            test_data.append(cv2.imread(new_line))
+                            com_result.append(int(line[-2]))
                     else :
                         new_lines.append(line)
 
             with open("data/" + i, "w") as f:
                 for new_line in new_lines:
                     f.writelines(new_line)
-
+    return test_data,com_result
 
 if __name__=='__main__':
+    # get hparams
     hparams = get_opts()
-    data_handle()
-
+    # get test_data and table
+    test_data,com_result = data_handle()
+    # data augmention
     train_transforms = T.Compose(
     [T.RandomCrop(crop_size=224), T.RandomHorizontalFlip(), T.Normalize()])
     eval_transforms = T.Compose([
@@ -89,5 +111,7 @@ if __name__=='__main__':
             train_dataset=train_dataset,
             eval_dataset=eval_dataset,
             lr_decay_epochs=[4, 6, 8])
-
+    # model_path = ...
+    # mymodel.load_model(model_path)
+    mymodel.test(test_data,com_result)
     

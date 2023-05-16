@@ -1,7 +1,7 @@
 '''
 Author: fyx
 Date: 2023-04-10 18:22:37
-LastEditTime: 2023-05-15 20:42:13
+LastEditTime: 2023-05-16 22:00:13
 Description: 缺陷生成
 '''
 import cv2
@@ -39,16 +39,21 @@ class DataProcessor:
     def add_bg(self,save_path:str = None ,img:np.ndarray = None,img_type:int = 1) ->None:
         img = cv2.resize(img,None,fx=0.5,fy=1,interpolation=cv2.INTER_CUBIC)
         for path ,dir_list, file_list in os.walk(self.config['bg_path']):
-            for id ,file in enumerate(file_list):
+            bg_num = len(file_list)
+            for i in range(4):
+                id = random.randint(0,bg_num-1)
+                file = file_list[id]
                 bg_path = os.path.join(path,file)
                 bg_img = cv2.imread(bg_path)
                 mask = 255*np.ones(img.shape,img.dtype)
                 #背景图shape             
                 height, width, channels = bg_img.shape
+                #文字shape
+                text_h,text_w,_ = img.shape
                 center = (np.random.randint(int(width/2)-20,int(width/2)+20),np.random.randint(int(height/2)-20,int(height/2)+20))
                 mixed_clone = cv2.seamlessClone(img, bg_img, mask, center, cv2.MIXED_CLONE)
                 # ret_img = mixed_clone
-                ret_img = mixed_clone[center[1]-128:center[1]+128,center[0]-400:center[0]+400]
+                ret_img = mixed_clone[center[1]-int(text_h/2):center[1]+int(text_h/2),center[0]-int(text_w/2):center[0]+int(text_w/2)]
                 img_path = save_path[:-4]+'_'+str(id)+'.jpg'
                 
                 cv2.imwrite(img_path,ret_img)
@@ -71,7 +76,7 @@ class DataProcessor:
             self.add_bg(save_path=picture_name,img=origin_img,img_type=0)
             info_name=os.path.join(self.path,path_name+'.csv')
             #缺陷类型
-            defect_type = np.random.randint(1,3)
+            defect_type = np.random.randint(1,4)
             if defect_type ==1:
                 self.img_loss(picture_path=picture_name,info_path=info_name,id=id)
             elif defect_type ==2:
@@ -104,7 +109,7 @@ class DataProcessor:
         img=cv2.imread(picture_path)
         img_pd=pd.read_csv(info_path)
         result=img.copy()
-        mode=1
+        mode=np.random.randint(1,3)
         #mode=1,单个字符漏印
         if mode==1:
             select=random.randint(0,img_pd.shape[0]-1)
@@ -217,7 +222,7 @@ def main()-> None:
     config['test_path'] = os.path.join(os.path.dirname(__file__), '../..','data','test_list.txt')
     config['val_path'] = os.path.join(os.path.dirname(__file__), '../..','data','val_list.txt')
     config['bg_path'] = os.path.join(os.path.dirname(__file__), '../..','data','background')
-    config['num'] = int(20)
+    config['num'] = int(40)
     processor=DataProcessor(config=config)
     processor.data_process()
     # processor.img_shift(20,30)

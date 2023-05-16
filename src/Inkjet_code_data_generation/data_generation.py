@@ -134,9 +134,10 @@ def get_pos_rate_dic(text,font_size):
 def create_data(picture_num):
 
     for k in range(picture_num):
-
+        maxsize = 0
         # 确认字体
         font_size = random.randint(30, 60)
+        maxsize = max(maxsize,font_size)
         font = ImageFont.truetype(font_path, font_size)
 
         # 确认文本,和序列
@@ -156,10 +157,11 @@ def create_data(picture_num):
         # print('origin', origin_w , origin_h)
 
         # 创建图像
-        h = int((1 + random.random()) * origin_h)
-        w = int((1 + random.random()) * origin_w)
+        h = int(origin_h)
+        w = int(origin_w)
         # print('img', w, h)
         image_size = (w, h)
+        print(image_size)
 
         # 背景绘制
         image = Image.new('RGB', image_size, background_color)
@@ -169,11 +171,8 @@ def create_data(picture_num):
         # output_size = (1, 1)
         # draw.text(output_size, text, text_color, font=font)
         text_color = (0, 0, 0)
-        origin_x = int(random.random() * (w - origin_w))
-        origin_y = int(random.random() * (h - origin_h))
-        output_size = (origin_x, origin_y)
-        draw.text(output_size, text, text_color, font=font)
-
+        origin_x , origin_y = (0,0)
+        draw.text([0,0], text, text_color, font=font)
         # 确定保存路径
         dicname = dicname_format.format(k + 1)
         picture_filename = picture_filename_format.format(k + 1)
@@ -185,7 +184,8 @@ def create_data(picture_num):
         x = origin_x
         # 保存text中每个char的位置信息
         char_positions = []
-
+        min_y = w
+        r_x = 0
 
         for char,idx in zip(text,text_idx):
             # 字符宽高
@@ -195,7 +195,7 @@ def create_data(picture_num):
             # new y
             y = origin_y
             y = int((y+char_height) - char_height * h_rate_list[idx]) -1
-
+            min_y = min(y,min_y)
             # new height
             h = int(char_height * h_rate_list[idx]) + 1
 
@@ -207,7 +207,10 @@ def create_data(picture_num):
             char_positions.append(char_bbox)
 
             x += char_width
-
+        
+        r_x, _, h, _, _ = char_positions[-1]
+        r_x = r_x+h
+        print(r_x)
         # print(text, char_positions)
 
 
@@ -223,14 +226,15 @@ def create_data(picture_num):
         # bbox = font.getbbox(text)
         # print('bbox' , bbox)
         # draw.rectangle(bbox, outline="black")
-
-        image.save(save_path + picture_filename, 'JPEG')
+        result = image.crop((0,min_y,min(origin_w,r_x),origin_h))
+        result.save(save_path + picture_filename, 'JPEG')
 
         with open(save_path + csv_filename, 'w', newline='') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(['x', 'y', 'h', 'w', 'info'])
             for bbox in char_positions:
                 x, y, h, w, info = bbox
+                y = y-min_y
                 writer.writerow([x, y, h, w, info])
 
 
